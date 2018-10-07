@@ -1,0 +1,8 @@
+- name: Copy coredns manifest
+  template: src=coredns.yml.j2 dest=/etc/kubernetes/coredns.yml
+- name: Apply coredns deployment
+  command: kubectl apply -f /etc/kubernetes/coredns.yml
+  environment:
+    KUBECONFIG: "{{ kube_kubelet_config }}"
+  register: apply_coredns_result
+  changed_when: apply_coredns_result.stdout is search("configured|created")
